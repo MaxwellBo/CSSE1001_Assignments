@@ -1,3 +1,3 @@
 # Assignments
 
-Repository contains completed assignments for the Introduction to Software Engineering course.
+Repository contains completed assignments for UQ's first year Introduction to Software Engineering course.
