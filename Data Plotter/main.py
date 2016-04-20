@@ -72,7 +72,7 @@ class AnimalData(object):
 
     def is_colour(self, index: int) -> str:
         """
-        Returns the colour the indexth animal data is to 
+        Returns the colour the indexth animal data is to
         be displayed and plotted with.
         """
         return self._colourFlags[index]
@@ -86,7 +86,7 @@ class AnimalData(object):
 
     def select(self, index: int) -> None:
         """
-        Sets the indexth data set flag, indicating that the animal 
+        Sets the indexth data set flag, indicating that the animal
         data should be displayed.
         """
         self._selectedFlags[index] = True
@@ -104,17 +104,17 @@ class AnimalData(object):
         (min_height, max_height, min_weight, max_weight).
 
         If no sets are selected the method will return a 4-tuple of
-        (None, None, None, None) 
+        (None, None, None, None)
 
-        get_ranges(AnimalData) -> Union[
-                                        Tuple[float, float, float, float], 
-                                        Tuple[None, None, None, None]
-                                        ]
+        get_ranges(AnimalData) -> Union[ Tuple[float, float, float, float]
+                                       , Tuple[None, None, None, None]
+                                       ]
         """
         heights = []
         weights = []
-        for animal in [self.get_animal(name) for index, name in enumerate(self.get_animal_names())\
-        if self.is_selected(index) is True]:
+        for animal in [self.get_animal(name)\
+                       for index, name in enumerate(self.get_animal_names())\
+                       if self.is_selected(index) is True]:
             heights.append(animal.get_height_range()[0])
             heights.append(animal.get_height_range()[1])
             weights.append(animal.get_weight_range()[0])
@@ -131,16 +131,16 @@ class AnimalData(object):
         data set.
         """
         if self.is_selected(index) is True:
-            return LABEL_FORMAT.format( 
-                    self.get_animal_names()[index],
-                    len(self.get_animal(self.get_animal_names()[index]).get_data_points()), 
-                    "Visible"
+            return LABEL_FORMAT.format(
+                      self.get_animal_names()[index],
+                    , len(self.get_animal(self.get_animal_names()[index]).get_data_points())
+                    , "Visible"
                     )
         else:
-            return LABEL_FORMAT.format( 
-                    self.get_animal_names()[index],
-                    len(self.get_animal(self.get_animal_names()[index]).get_data_points()), 
-                    "Hidden"
+            return LABEL_FORMAT.format(
+                      self.get_animal_names()[index],
+                    , len(self.get_animal(self.get_animal_names()[index]).get_data_points())
+                    , "Hidden"
                     )
 
 class SelectionBox(tk.Listbox):
@@ -157,7 +157,7 @@ class SelectionBox(tk.Listbox):
     def get_index(self) -> int:
         """
         Returns the index of the entry highlighted
-        
+
         Preconditions:
         If there is no entry highlighted, the program will
         throw an error dialog box.
@@ -190,7 +190,7 @@ class Plotter(tk.Canvas):
         Constructor: Plotter(tkinter.Frame, **kwargs)
         """
         super().__init__(*args, **kwargs)
-        
+
         self.bind("<Configure>", self.on_resize)
         self._canvasWidth = 0
         self._canvasHeight = 0
@@ -204,9 +204,9 @@ class Plotter(tk.Canvas):
         self._translator = CoordinateTranslator(1, 1, 1, 2, 1, 2)
         self._vertical_line = self.create_line(0, 0, 0, 0)
         self._horizontal_line = self.create_line(0, 0, 0, 0)
-        
+
         self._cache = None
-        
+
     def on_resize(self, event: tk.Event) -> None:
         """
         Given a <Configure> tkinter.Event, assigns its attributes
@@ -224,20 +224,20 @@ class Plotter(tk.Canvas):
         Given a mouse <Motion> tkinter.Event, uses its coordinate attributes
         to reposition the crosshair.
 
-        These coordinates are translated, and pushed as a string to 
+        These coordinates are translated, and pushed as a string to
         a public field.
         """
         if self._displayingData:
             self.coords(self._horizontal_line, event.x, 0, event.x, self._canvasHeight)
             self.coords(self._vertical_line, 0, event.y, self._canvasWidth, event.y)
             self.pushedLabel = "Height: {0:.2f}cm  Weight: {1:.2f}kg".format(
-                                self._translator.get_height(event.x), 
+                                self._translator.get_height(event.x),
                                 self._translator.get_weight(event.y)
                                 )
 
     def on_leave(self, event: tk.Event) -> None:
         """
-        Accepts a tkinter.Event, and makes the 
+        Accepts a tkinter.Event, and makes the
         crosshair invisible
 
         An empty string is pushed to a public field.
@@ -249,25 +249,25 @@ class Plotter(tk.Canvas):
     def refresh_with(self, data: AnimalData) -> None:
         """
         Given a AnimalData object, caches it to a Plotter private instance
-        variable for use. 
+        variable for use.
 
-        Reinitializes a CoordinateTranslator with new ranges 
-        and canvas dimensions, wipes the canvas clean, 
-        and replots all the points again. 
+        Reinitializes a CoordinateTranslator with new ranges
+        and canvas dimensions, wipes the canvas clean,
+        and replots all the points again.
 
         If there are datasets flagged to displayed,
-        sets flags so that the Plotter knows if it 
-        should draw crosshairs / display labels. 
+        sets flags so that the Plotter knows if it
+        should draw crosshairs / display labels.
         """
         self._cache = data
         if None not in self._cache.get_ranges():
             self._translator.__init__(
-                                self._canvasWidth, 
-                                self._canvasHeight,
-                                self._cache.get_ranges()[0], 
-                                self._cache.get_ranges()[1], 
-                                self._cache.get_ranges()[2],
-                                self._cache.get_ranges()[3]
+                                  self._canvasWidth
+                                , self._canvasHeight
+                                , self._cache.get_ranges()[0]
+                                , self._cache.get_ranges()[1]
+                                , self._cache.get_ranges()[2]
+                                , self._cache.get_ranges()[3]
                                 )
             self._displayingData = True
         else:
@@ -284,10 +284,10 @@ class Plotter(tk.Canvas):
 
     def plot_point(self, x: float, y: float, colour: str) -> None:
         """
-        Given x and y coordinates, and colour, plots a 5 x 5 rectangle filled with colour, 
+        Given x and y coordinates, and colour, plots a 5 x 5 rectangle filled with colour,
         with its centre lying on the provided coordinates.
 
-        Plotted points are tagged with 'point'. 
+        Plotted points are tagged with 'point'.
         """
         self.create_rectangle((x-2.5), (y-2.5), (x+2.5), (y+2.5),  fill=colour, tag='point')
 
@@ -329,7 +329,7 @@ class AnimalDataPlotApp(object):
 
         self._RHS = tk.Frame(self._master)
         self._RHS.pack(side=tk.LEFT, anchor=tk.N, expand=True, fill=tk.BOTH)
-        
+
         self._pointerText = tk.StringVar()
         self._pointerText.set("")
         self._pointer_label = tk.Label(self._RHS, textvariable=self._pointerText)
@@ -351,58 +351,55 @@ class AnimalDataPlotApp(object):
         """
         Opens a file selection dialogbox.
 
-        If a valid file is selected, updates the AnimalData object, 
+        If a valid file is selected, updates the AnimalData object,
         updates the SelectionBox object and refreshes the Plotter object
-        with the updated AnimalData object.  
+        with the updated AnimalData object.
         """
-        filename = filedialog.askopenfilename( filetypes =  (   
-                                            ("All files", "*.*"), 
-                                            ("CSV files", "*.csv")
-                                            ) )
+        filename = filedialog.askopenfilename(filetypes = ( ("All files", "*.*")
+                                                          , ("CSV files", "*.csv")
+                                                          ) )
         if filename:
-            try: 
+            try:
                 newIndex = self._data.load_data(filename)
                 if newIndex is not False:
                     self._plotter.refresh_with(self._data)
                     self._selection_box.make_entry(
-                                            self._data.to_tabbed_string(newIndex),
-                                            self._data.is_colour(newIndex)
+                                              self._data.to_tabbed_string(newIndex)
+                                            , self._data.is_colour(newIndex)
                                             )
             except:
-                messagebox.showerror("File Error", 
+                messagebox.showerror("File Error",
                 "{0} is an invalid Animal Data file".format(filename))
 
     def select(self) -> None:
         """
-        Flags the highlighted dataset as "Visible", updates the SelectionBox 
-        object and refreshes the Plotter object with the updated AnimalData object.  
+        Flags the highlighted dataset as "Visible", updates the SelectionBox
+        object and refreshes the Plotter object with the updated AnimalData object.
         """
         try:
             index = self._selection_box.get_index()[0]
             self._data.select(index)
             self._plotter.refresh_with(self._data)
-            self._selection_box.update_entry(
-                                            index, 
-                                            self._data.to_tabbed_string(index),
-                                            self._data.is_colour(index)
+            self._selection_box.update_entry( index
+                                            , self._data.to_tabbed_string(index)
+                                            , self._data.is_colour(index)
                                             )
         except:
-            messagebox.showerror("Unable to change flag", 
+            messagebox.showerror("Unable to change flag",
             "Please choose a dataset from the list below to select")
-    
-    def deselect(self) -> None: 
+
+    def deselect(self) -> None:
         """
-        Flags the highlighted dataset as "Hidden", updates the SelectionBox 
-        object and refreshes the Plotter object with the updated AnimalData object.  
+        Flags the highlighted dataset as "Hidden", updates the SelectionBox
+        object and refreshes the Plotter object with the updated AnimalData object.
         """
         try:
             index = self._selection_box.get_index()[0]
             self._data.deselect(index)
             self._plotter.refresh_with(self._data)
-            self._selection_box.update_entry(
-                                            index, 
-                                            self._data.to_tabbed_string(index), 
-                                            self._data.is_colour(index)
+            self._selection_box.update_entry( index
+                                            , self._data.to_tabbed_string(index),
+                                            , self._data.is_colour(index)
                                             )
         except:
             messagebox.showerror("Unable to change flag",
